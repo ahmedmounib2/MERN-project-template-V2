@@ -1,0 +1,37 @@
+{
+  "scripts": {
+    "prepare": "husky install",
+    "lint": "eslint \"./**/*.{js,jsx,ts,tsx}\"",
+    "lint:fix": "eslint \"./**/*.{js,jsx,ts,tsx}\" --fix",
+    "format": "prettier --write \"./**/*.{js,jsx,ts,tsx,json,yml,css,scss,md}\""
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.26.0",
+    "@typescript-eslint/eslint-plugin": "^8.32.0",
+    "@typescript-eslint/parser": "^8.32.0",
+    "eslint": "^9.26.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "eslint-plugin-security": "^3.0.1",
+    "globals": "^16.1.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^15.5.2",
+    "prettier": "^3.5.3"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,yml,css,scss}": [
+      "prettier --write"
+    ],
+    "*.md": [
+      "prettier --write --parser markdown"
+    ]
+  }
+}
