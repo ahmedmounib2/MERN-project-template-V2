@@ -214,6 +214,50 @@ Security: Object injection/SQLi prevention
 
 Accessibility: Strict jsx-a11y rules
 
+🎨 CSS & Tailwind Linting with Stylelint
+This template includes Stylelint for enforcing consistent and maintainable styles across CSS, SCSS, and Tailwind CSS files.
+
+Stylelint Highlights
+✅ Tailwind CSS-aware linting
+
+✅ SCSS support
+
+✅ CSS-in-JS / HTML-inlined styles support (via postcss-html)
+
+✅ Enforced property ordering (optional)
+
+✅ Preconfigured to run automatically via lint-staged before commits
+
+project-root/
+├── stylelint.config.js         # Central Stylelint configuration
+├── .stylelintignore            # Ignored folders and generated styles
+├── .husky/
+│   └── pre-commit              # Git hook running lint-staged
+└── package.json                # Runs Stylelint via scripts/lint-staged
+
+Installation
+
+npm install --save-dev \
+  stylelint \
+  stylelint-config-standard \
+  stylelint-config-tailwindcss \
+  stylelint-order \
+  postcss \
+  postcss-scss \
+  postcss-html
+
+
+Lint Scripts in package.json
+"scripts": {
+  "lint": "npm run lint:js && npm run lint:css",
+  "lint:js": "eslint \"./**/*.{js,jsx,ts,tsx}\"",
+  "lint:css": "stylelint \"**/*.{css,scss}\"",
+  "lint:fix": "npm run lint:js -- --fix && npm run lint:css -- --fix",
+  "format": "prettier --write \"./**/*.{js,jsx,ts,tsx,json,yml,css,scss,md}\" && stylelint \"**/*.{css,scss}\" --fix"
+}
+
+
+
 🛡️ Enterprise-Grade .gitignore
 Covers:
 
