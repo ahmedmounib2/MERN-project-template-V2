@@ -1,4 +1,7 @@
 {
+  "name": "chatapp-mern",
+  "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "prepare": "husky install",
     "lint": "npm run lint:js && npm run lint:css",
@@ -11,10 +14,14 @@
     "dev:frontend": "cd frontend && npm run dev"
   },
   "devDependencies": {
+    "@commitlint/config-conventional": "^19.8.1",
     "@eslint/js": "^9.26.0",
     "@typescript-eslint/eslint-plugin": "^8.32.0",
     "@typescript-eslint/parser": "^8.32.0",
+    "commitizen": "^4.3.1",
+    "commitlint": "^19.8.1",
     "concurrently": "^9.1.2",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.26.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-import": "^2.31.0",
@@ -24,7 +31,7 @@
     "eslint-plugin-react-refresh": "^0.4.20",
     "eslint-plugin-security": "^3.0.1",
     "globals": "^16.1.0",
-    "husky": "^8.0.0",
+    "husky": "^8.0.3",
     "lint-staged": "^15.5.2",
     "postcss": "^8.5.3",
     "postcss-html": "^1.8.0",
@@ -50,5 +57,10 @@
     "*.md": [
       "prettier --write --parser markdown"
     ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
   }
 }
