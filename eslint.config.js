@@ -1,31 +1,38 @@
-import eslintPluginReact from 'eslint-plugin-react';
-import eslintPluginJsxA11y from 'eslint-plugin-jsx-a11y';
-import eslintPluginReactHooks from 'eslint-plugin-react-hooks';
-import tseslint from '@typescript-eslint/eslint-plugin';
-import tsParser from '@typescript-eslint/parser';
 import js from '@eslint/js';
-import globals from 'globals';
-import eslintPluginReactRefresh from 'eslint-plugin-react-refresh';
+import tsPlugin from '@typescript-eslint/eslint-plugin';
+import tsParser from '@typescript-eslint/parser';
 import prettier from 'eslint-config-prettier';
+import eslintPluginImport from 'eslint-plugin-import';
+import eslintPluginJsxA11y from 'eslint-plugin-jsx-a11y';
+import eslintPluginMarkdown from 'eslint-plugin-markdown';
+import eslintPluginReact from 'eslint-plugin-react';
+import eslintPluginReactHooks from 'eslint-plugin-react-hooks';
+import eslintPluginReactRefresh from 'eslint-plugin-react-refresh';
 import securityPlugin from 'eslint-plugin-security';
+import tailwindPlugin from 'eslint-plugin-tailwindcss';
+import globals from 'globals';
 
-/** @type {import("eslint").Linter.Config} */
+/** @type {import("eslint").Linter.FlatConfig} */
 export default [
-  // TypeScript Files Configuration
+  // Frontend + shared TypeScript files
   {
-    files: ['**/*.ts', '**/*.tsx'],
+    files: ['**/*.{ts,tsx}'],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
         project: './tsconfig.json',
+        ecmaVersion: 'latest',
+        sourceType: 'module',
         extraFileExtensions: ['.json', '.css'],
       },
     },
     plugins: {
-      '@typescript-eslint': tseslint,
+      '@typescript-eslint': tsPlugin,
       'react': eslintPluginReact,
       'jsx-a11y': eslintPluginJsxA11y,
       'react-hooks': eslintPluginReactHooks,
+      'import': eslintPluginImport,
+      'tailwindcss': tailwindPlugin,
     },
     rules: {
       ...js.configs.recommended.rules,
@@ -40,9 +47,19 @@ export default [
       'react-hooks/exhaustive-deps': 'warn',
       'jsx-a11y/alt-text': 'warn',
       'jsx-a11y/anchor-is-valid': 'warn',
+      'import/order': [
+        'warn',
+        {
+          'groups': ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+          'alphabetize': { order: 'asc', caseInsensitive: true },
+          'newlines-between': 'always',
+        },
+      ],
+      'tailwindcss/classnames-order': 'error',
     },
   },
-  // JavaScript Files Configuration (JSX)
+
+  // JavaScript (JS/JSX) frontend files
   {
     files: ['**/*.{js,jsx}'],
     languageOptions: {
@@ -55,55 +72,78 @@ export default [
       },
     },
     plugins: {
+      'react': eslintPluginReact,
       'react-hooks': eslintPluginReactHooks,
       'react-refresh': eslintPluginReactRefresh,
+      'import': eslintPluginImport,
+      'tailwindcss': tailwindPlugin,
     },
     rules: {
       ...js.configs.recommended.rules,
       'no-unused-vars': ['warn', { varsIgnorePattern: '^[A-Z_]' }],
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
-    },
-  },
-  {
-    files: ['**/*.md'],
-    languageOptions: { parser: null },
-    rules: {
-      'no-trailing-spaces': 'warn',
+      'import/order': [
+        'warn',
+        {
+          'groups': ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+          'alphabetize': { order: 'asc', caseInsensitive: true },
+          'newlines-between': 'always',
+        },
+      ],
+      'tailwindcss/classnames-order': 'error',
     },
   },
 
-  // Node.js Backend Files Configuration
+  // Backend TypeScript files
   {
-    files: ['backend/**/*.js'],
+    files: ['backend/**/*.ts'],
     languageOptions: {
-      ecmaVersion: 'latest',
-      globals: {
-        ...globals.node, // Node.js globals
-        process: 'readonly',
-      },
+      parser: tsParser,
       parserOptions: {
+        project: './backend/tsconfig.json',
+        ecmaVersion: 'latest',
         sourceType: 'module',
       },
+      globals: globals.node,
     },
     plugins: {
-      security: securityPlugin,
+      '@typescript-eslint': tsPlugin,
+      'security': securityPlugin,
     },
     rules: {
-      'no-unused-vars': [
-        'warn',
-        {
-          argsIgnorePattern: '^_',
-          varsIgnorePattern: '^_',
-          caughtErrorsIgnorePattern: '^_',
-        },
-      ],
+      ...js.configs.recommended.rules,
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       'no-console': 'warn',
       'security/detect-object-injection': 'warn',
     },
   },
 
+  // Markdown files
   {
+    files: ['**/*.md'],
+    plugins: {
+      markdown: eslintPluginMarkdown,
+    },
+    processor: 'markdown/markdown',
+  },
+
+  // Prettier disables conflicting rules
+  {
+    ...prettier,
     ignores: ['dist', 'node_modules'],
-    ...prettier, // disables conflicting rules
+  },
+
+  // Vite environment recognition
+  {
+    files: ['**/vite.config.*', '*.cjs', '.eslintrc.*'],
+    languageOptions: {
+      globals: globals.node,
+      parserOptions: {
+        sourceType: 'script',
+      },
+    },
+    rules: {
+      'no-undef': 'error',
+    },
   },
 ];
