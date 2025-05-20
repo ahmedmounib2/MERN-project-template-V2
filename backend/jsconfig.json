@@ -4,10 +4,6 @@
     "module": "esnext",
     "moduleResolution": "node",
     "checkJs": true,
-    "baseUrl": "./",
-    "paths": {
-      "@/*": ["src/*"]
-    },
     "allowSyntheticDefaultImports": true,
     "noEmit": true
   },

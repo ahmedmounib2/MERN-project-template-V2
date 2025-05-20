@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/index.js"
+    "dev": "cross-env NODE_ENV=development nodemon src/index.js",
+    "start": "cross-env NODE_ENV=production node src/index.js"
   },
   "keywords": [],
   "author": "",
@@ -23,9 +24,7 @@
   "devDependencies": {
     "@types/express": "^5.0.2",
     "@types/node": "^22.15.19",
+    "cross-env": "^7.0.3",
     "nodemon": "^3.1.10"
-  },
-  "_moduleAliases": {
-    "@": "src"
   }
 }

@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "prepare": "husky install",
+    "start": "npm run start --prefix backend",
     "lint": "npm run lint:js && npm run lint:css",
     "lint:js": "eslint \"./**/*.{js,jsx,ts,tsx}\"",
     "lint:css": "stylelint \"**/*.{css,scss}\"",
@@ -11,7 +12,8 @@
     "format": "prettier --write \"./**/*.{js,jsx,ts,tsx,json,yml,css,scss,md}\" && stylelint \"**/*.{css,scss}\" --fix",
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:backend": "cd backend && npm run dev",
-    "dev:frontend": "cd frontend && npm run dev"
+    "dev:frontend": "cd frontend && npm run dev",
+    "build": "rm -rf node_modules && npm install && (cd backend && npm ci) && (cd frontend && npm ci && npm run build)"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^19.8.1",
