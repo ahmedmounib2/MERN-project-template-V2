@@ -316,6 +316,87 @@ Zero-Warning Policy
 }
 
 
+📦 Node.js Version Management
+Automated Version Switching with .nvmrc
+
+The script configures automatic Node.js version switching through these components:
+Make sure to edit .zshrc with this script:
+
+autoload -U add-zsh-hook
+load-nvmrc() {
+  local current_node=$(nvm version)
+  local nvmrc_path=$(nvm_find_nvmrc)
+
+  if [ -n "$nvmrc_path" ]; then
+    local desired_node=$(cat "$nvmrc_path")
+    if [ "$desired_node" != "$current_node" ]; then
+      nvm install "$desired_node"
+      nvm use "$desired_node"
+    fi
+  elif [ "$current_node" != "system" ]; then
+    nvm use system >/dev/null 2>&1 || true
+  fi
+}
+add-zsh-hook chpwd load-nvmrc
+load-nvmrc
+
+What This Does
+Automatic Detection: Scans directories for .nvmrc files when you cd
+Version Switching: Changes Node.js version to match .nvmrc
+Auto-Install: Installs missing Node versions if needed
+Fallback: Uses system Node when no .nvmrc found
+Setup for Projects
+
+Create .nvmrc File In your project root:
+
+node -v > .nvmrc  # For existing projects
+or manually specify version:
+
+echo "20.19.0" > .nvmrc
+Supported Version Formats .nvmrc can specify:
+
+Exact version: 20.19.0
+LTS names: lts/hydrogen
+Version patterns: 18.x, >=16.13.0 <17.0.0
+Workflow Example
+
+cd my-project/     # Directory with .nvmrc
+# [Now using Node v20.19.0]
+
+git pull
+npm install
+
+cd ../legacy-project/  # Directory without .nvmrc
+# [Falling back to system Node v18.12.1]
+
+Key Features:
+Multi-level Search: Looks for .nvmrc in parent directories
+Silent Operation: Only shows output when changing versions
+Project Isolation: Version changes don't affect other terminals
+CI/CD Ready: Works in scripts and automation environments
+
+Troubleshooting:
+Q: Version isn't switching automatically Fix:
+
+# 1. Verify .nvmrc exists
+ls -a | grep .nvmrc
+
+# 2. Check file contents
+cat .nvmrc
+
+# 3. Manually trigger detection
+load-nvmrc
+Q: Getting "Version not found" error Fix: Install available versions with:
+
+nvm ls-remote  # List available versions
+nvm install <version-from-list>
+
+Q: Want to disable auto-switching? Remove Hook:
+
+# Add to ~/.zshrc
+add-zsh-hook -d chpwd load-nvmrc
+
+
 ✅ Why This Template?
 VanillaJS First optionally add TS if needed
 Full-stack type safety from day one
@@ -337,6 +418,8 @@ Passing ESLint security rules
 TypeScript type-checks
 
 Prettier-formatted code
+
+Automated Version Switching with .nvmrc
 
 Signed commits (optional)
 ```
